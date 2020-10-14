@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		7B1CC74125372E6300FE5878 /* .swiftlint.yml in Resources */ = {isa = PBXBuildFile; fileRef = 7B1CC74025372E6300FE5878 /* .swiftlint.yml */; };
 		7B3A42AC25368E220091F61D /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A42AB25368E220091F61D /* AppDelegate.swift */; };
 		7B3A42AE25368E220091F61D /* SceneDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A42AD25368E220091F61D /* SceneDelegate.swift */; };
 		7B3A42B025368E220091F61D /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A42AF25368E220091F61D /* ViewController.swift */; };
@@ -36,6 +37,7 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		7B1CC74025372E6300FE5878 /* .swiftlint.yml */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.yaml; path = .swiftlint.yml; sourceTree = "<group>"; };
 		7B3A42A825368E220091F61D /* FullMind.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = FullMind.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B3A42AB25368E220091F61D /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7B3A42AD25368E220091F61D /* SceneDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SceneDelegate.swift; sourceTree = "<group>"; };
@@ -81,6 +83,7 @@
 		7B3A429F25368E220091F61D = {
 			isa = PBXGroup;
 			children = (
+				7B1CC74025372E6300FE5878 /* .swiftlint.yml */,
 				7B3A42AA25368E220091F61D /* FullMind */,
 				7B3A42C425368E230091F61D /* FullMindTests */,
 				7B3A42CF25368E230091F61D /* FullMindUITests */,
@@ -141,6 +144,7 @@
 				7B3A42A425368E220091F61D /* Sources */,
 				7B3A42A525368E220091F61D /* Frameworks */,
 				7B3A42A625368E220091F61D /* Resources */,
+				7B1CC73C25372D8E00FE5878 /* ShellScript */,
 			);
 			buildRules = (
 			);
@@ -234,6 +238,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7B1CC74125372E6300FE5878 /* .swiftlint.yml in Resources */,
 				7B3A42BB25368E230091F61D /* LaunchScreen.storyboard in Resources */,
 				7B3A42B825368E230091F61D /* Assets.xcassets in Resources */,
 				7B3A42B325368E220091F61D /* Main.storyboard in Resources */,
@@ -255,6 +260,26 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
+
+/* Begin PBXShellScriptBuildPhase section */
+		7B1CC73C25372D8E00FE5878 /* ShellScript */ = {
+			isa = PBXShellScriptBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+			);
+			inputFileListPaths = (
+			);
+			inputPaths = (
+			);
+			outputFileListPaths = (
+			);
+			outputPaths = (
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+			shellPath = /bin/sh;
+			shellScript = "# Type a script or drag a script file from your workspace to insert its path.\nif which swiftlint >/dev/null; then\n  swiftlint\nelse\n  echo \"warning: SwiftLint not installed, download from https://github.com/realm/SwiftLint\"\nfi\n";
+		};
+/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		7B3A42A425368E220091F61D /* Sources */ = {
@@ -440,6 +465,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 937MK3AF6X;
 				INFOPLIST_FILE = FullMind/Info.plist;
@@ -447,8 +473,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.patriciasampaiosiqueira.FullMind;
+				PRODUCT_BUNDLE_IDENTIFIER = com.patriciasampaio.FullMind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
@@ -459,6 +486,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 937MK3AF6X;
 				INFOPLIST_FILE = FullMind/Info.plist;
@@ -466,8 +494,9 @@
 					"$(inherited)",
 					"@executable_path/Frameworks",
 				);
-				PRODUCT_BUNDLE_IDENTIFIER = com.patriciasampaiosiqueira.FullMind;
+				PRODUCT_BUNDLE_IDENTIFIER = com.patriciasampaio.FullMind;
 				PRODUCT_NAME = "$(TARGET_NAME)";
+				PROVISIONING_PROFILE_SPECIFIER = "";
 				SWIFT_VERSION = 5.0;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
