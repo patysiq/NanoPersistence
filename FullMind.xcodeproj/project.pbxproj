@@ -17,6 +17,7 @@
 		7B3A42BB25368E230091F61D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 7B3A42B925368E230091F61D /* LaunchScreen.storyboard */; };
 		7B3A42C625368E230091F61D /* FullMindTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A42C525368E230091F61D /* FullMindTests.swift */; };
 		7B3A42D125368E230091F61D /* FullMindUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A42D025368E230091F61D /* FullMindUITests.swift */; };
+		7B93CAAC25388DE500719CB8 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B93CAAB25388DE500719CB8 /* HomeCollectionViewCell.swift */; };
 		7BCC230A2537ECE300E00982 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCC23092537ECE300E00982 /* HomeTableViewCell.swift */; };
 /* End PBXBuildFile section */
 
@@ -54,6 +55,7 @@
 		7B3A42CC25368E230091F61D /* FullMindUITests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = FullMindUITests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		7B3A42D025368E230091F61D /* FullMindUITests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = FullMindUITests.swift; sourceTree = "<group>"; };
 		7B3A42D225368E230091F61D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		7B93CAAB25388DE500719CB8 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		7BCC23092537ECE300E00982 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -157,6 +159,7 @@
 			children = (
 				7B3A42AF25368E220091F61D /* HomeViewController.swift */,
 				7BCC23092537ECE300E00982 /* HomeTableViewCell.swift */,
+				7B93CAAB25388DE500719CB8 /* HomeCollectionViewCell.swift */,
 			);
 			path = Controller;
 			sourceTree = "<group>";
@@ -318,6 +321,7 @@
 				7B3A42B025368E220091F61D /* HomeViewController.swift in Sources */,
 				7B3A42AC25368E220091F61D /* AppDelegate.swift in Sources */,
 				7B3A42AE25368E220091F61D /* SceneDelegate.swift in Sources */,
+				7B93CAAC25388DE500719CB8 /* HomeCollectionViewCell.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
