@@ -28,22 +28,6 @@
                                             <rect key="frame" x="0.0" y="0.0" width="414" height="230"/>
                                             <autoresizingMask key="autoresizingMask"/>
                                             <subviews>
-                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="283" translatesAutoresizingMaskIntoConstraints="NO" id="0v2-lc-os4">
-                                                    <rect key="frame" x="10" y="0.0" width="378" height="44"/>
-                                                    <subviews>
-                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EMg-Rt-SrS">
-                                                            <rect key="frame" x="0.0" y="0.0" width="65" height="44"/>
-                                                            <fontDescription key="fontDescription" name="EuphemiaUCAS-Bold" family="Euphemia UCAS" pointSize="24"/>
-                                                            <nil key="textColor"/>
-                                                            <nil key="highlightedColor"/>
-                                                        </label>
-                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4LS-ak-UvJ">
-                                                            <rect key="frame" x="348" y="0.0" width="30" height="44"/>
-                                                            <fontDescription key="fontDescription" name="EuphemiaUCAS-Bold" family="Euphemia UCAS" pointSize="24"/>
-                                                            <state key="normal" title="+"/>
-                                                        </button>
-                                                    </subviews>
-                                                </stackView>
                                                 <collectionView clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="scaleToFill" showsVerticalScrollIndicator="NO" dataMode="prototypes" translatesAutoresizingMaskIntoConstraints="NO" id="ijb-nP-gx6">
                                                     <rect key="frame" x="0.0" y="44" width="414" height="186"/>
                                                     <color key="backgroundColor" systemColor="systemBackgroundColor"/>
@@ -85,6 +69,25 @@
                                                         </collectionViewCell>
                                                     </cells>
                                                 </collectionView>
+                                                <stackView opaque="NO" contentMode="scaleToFill" spacing="291" translatesAutoresizingMaskIntoConstraints="NO" id="0v2-lc-os4">
+                                                    <rect key="frame" x="10" y="0.0" width="386" height="44"/>
+                                                    <subviews>
+                                                        <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="EMg-Rt-SrS">
+                                                            <rect key="frame" x="0.0" y="0.0" width="65" height="44"/>
+                                                            <fontDescription key="fontDescription" name="EuphemiaUCAS-Bold" family="Euphemia UCAS" pointSize="24"/>
+                                                            <nil key="textColor"/>
+                                                            <nil key="highlightedColor"/>
+                                                        </label>
+                                                        <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="system" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="4LS-ak-UvJ">
+                                                            <rect key="frame" x="356" y="0.0" width="30" height="44"/>
+                                                            <fontDescription key="fontDescription" name="EuphemiaUCAS-Bold" family="Euphemia UCAS" pointSize="24"/>
+                                                            <state key="normal" title="+"/>
+                                                            <connections>
+                                                                <action selector="addCollecttionCell:" destination="ARi-wS-Zj4" eventType="touchUpInside" id="xDm-1f-h7a"/>
+                                                            </connections>
+                                                        </button>
+                                                    </subviews>
+                                                </stackView>
                                             </subviews>
                                             <constraints>
                                                 <constraint firstItem="ijb-nP-gx6" firstAttribute="leading" secondItem="KEY-RY-tE7" secondAttribute="leading" id="1Nb-ok-Awv"/>
@@ -97,6 +100,7 @@
                                         </tableViewCellContentView>
                                         <connections>
                                             <outlet property="collectionView" destination="ijb-nP-gx6" id="Jtn-oe-Xtf"/>
+                                            <outlet property="titleTableCell" destination="EMg-Rt-SrS" id="nXm-K8-Ost"/>
                                         </connections>
                                     </tableViewCell>
                                 </prototypes>
@@ -116,10 +120,14 @@
                         </constraints>
                     </view>
                     <navigationItem key="navigationItem" title="My cards" id="9fA-RK-JiA">
-                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bzD-n4-XWP"/>
+                        <barButtonItem key="rightBarButtonItem" systemItem="add" id="bzD-n4-XWP">
+                            <color key="tintColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                            <connections>
+                                <action selector="addTableCellPressed:" destination="BYZ-38-t0r" id="GC8-5y-k0H"/>
+                            </connections>
+                        </barButtonItem>
                     </navigationItem>
                     <connections>
-                        <outlet property="addTableCell" destination="bzD-n4-XWP" id="CC8-ft-8Uc"/>
                         <outlet property="tableView" destination="Jm0-Ri-axr" id="7nu-00-bPr"/>
                     </connections>
                 </viewController>
@@ -135,6 +143,9 @@
                     <navigationBar key="navigationBar" contentMode="scaleToFill" insetsLayoutMarginsFromSafeArea="NO" largeTitles="YES" id="9ZZ-Nx-Lnf">
                         <rect key="frame" x="0.0" y="44" width="414" height="96"/>
                         <autoresizingMask key="autoresizingMask"/>
+                        <textAttributes key="titleTextAttributes">
+                            <color key="textColor" white="0.0" alpha="1" colorSpace="calibratedWhite"/>
+                        </textAttributes>
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
