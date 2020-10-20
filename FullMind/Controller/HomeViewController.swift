@@ -4,10 +4,11 @@
 //
 //  Created by PATRICIA S SIQUEIRA on 13/10/20.
 //
+
 import UIKit
 import CoreData
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, CustomTableViewCellDelegate {
     @IBOutlet var blurView: UIVisualEffectView!
     @IBOutlet var popupView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -15,8 +16,10 @@ class HomeViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext // swiftlint:disable:this force_cast
 
     var category = [Category]()
-    var noteText = [Note]()
+    var notes = [Note]()
+    var indexSelect: Int = 0
     var number = Int.random(in: 1...6)
+    //var dataDelegate: SaveDataNote?
     var selectedNote: Category? {
         didSet {
             loadNotes()
@@ -31,8 +34,7 @@ class HomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
-        //loadCategories()
-        //loadNotes()
+        loadCategories()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
    }
 
@@ -55,23 +57,34 @@ class HomeViewController: UIViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-    // MARK: - Add new Note
+    // MARK: - Note Text Cache for View
     @IBAction func doneButton(_ sender: Any) {
         animateOut(desiredView: popupView)
         animateOut(desiredView: blurView)
-        if selectedNote == nil {
+        CacheManagerDone.setCacheDone(note.text,CacheManagerDone.getImage() ?? "\(number)")
+        guard let isNewNote = CacheManager.getNew() else {return}
+        if isNewNote {
             let newNote = Note(context: context)
             newNote.text = note.text
+            newNote.image = CacheManagerDone.getImage()
             newNote.parentCategory = self.selectedNote
-            noteText.append(newNote)
+            notes.append(newNote)
+            print("estou aqui")
         } else {
-            category[tableView.indexPathForSelectedRow?.row ?? 0].parentNote?.text = note.text
+            guard let indexSelect = CacheManager.getIndex() else {return}
+            notes[indexSelect - 1].text = note.text
+            notes[indexSelect - 1].image = CacheManagerDone.getImage()
         }
         saveItems()
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
-        }
         tableView.reloadData()
+        }
+    func addCollectionCell() {
+            popupView.backgroundColor = UIColor(named: CacheManager.getImage() ?? "\(number)")
+            animateIn(desiredView: blurView)
+            animateIn(desiredView: popupView)
+            note.text = CacheManager.getCache()
+            guard let noteData = CacheManager.getNotes() else {return}
+            notes = noteData
     }
     // MARK: - Animate View
     func animateIn(desiredView: UIView) {
@@ -105,9 +118,6 @@ class HomeViewController: UIViewController {
         } catch {
             print("Error saving context \(error)")
         }
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
-        }
         self.tableView.reloadData()
     }
     func loadNotes(with request: NSFetchRequest<Note> = Note.fetchRequest(), predicate: NSPredicate? = nil) {
@@ -118,12 +128,10 @@ class HomeViewController: UIViewController {
             request.predicate = categoryPredicate
         }
         do {
-            noteText = try context.fetch(request)
+            notes.removeAll()
+            notes = try context.fetch(request)
         } catch {
             print("Error fetching data from context \(error)")
-        }
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
         }
         tableView.reloadData()
     }
@@ -133,9 +141,6 @@ class HomeViewController: UIViewController {
             category = try context.fetch(request)
         } catch {
             print("Error loading categories \(error)")
-        }
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
         }
         tableView.reloadData()
     }
@@ -149,8 +154,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? HomeTableViewCell else { fatalError("Unable create cell") }
         cell.titleTableCell.text = category[indexPath.row].title
-        cell.collectionView.delegate = self
-        cell.collectionView.dataSource = self
         cell.delegate = self
         return cell
     }
@@ -161,35 +164,4 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         tableView.deselectRow(at: indexPath, animated: true)
     }
 
-}
-// MARK: - Collection View Delegate and Datasource
-
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return noteText.count
-    }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as? HomeCollectionViewCell else {
-            fatalError("Unable create cell")
-        }
-        cell.imageBack.image = UIImage(named: "\(number)")
-        cell.titleCollectionCell.text = noteText[indexPath.row].text
-        return cell
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180.0, height: 180.0)
-    }
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        popupView.backgroundColor = UIColor(named: "\(number)")
-        animateIn(desiredView: blurView)
-        animateIn(desiredView: popupView)
-    }
-}
-// MARK: - add Notes Methods
-extension HomeViewController: CustomTableViewCellDelegate {
-    func addCollectionCell() {
-        popupView.backgroundColor = UIColor(named: "\(number)")
-        animateIn(desiredView: blurView)
-        animateIn(desiredView: popupView)
-    }
 }
