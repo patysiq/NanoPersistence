@@ -11,20 +11,24 @@ struct CacheManager {
     static var text = String()
     static var image = String()
     static var isNew = Bool()
-    static var dataNotes = [Note]()
     static var indexSelect = Int()
-    static func setCache(_ data: String,_ imageView: String,_ isNewCell: Bool,_ notesData: [Note],_ index: Int) {
+    static var categorySelect = Category()
+    static var notesEdit = [Note]()
+    static func setCache(_ data: String,_ imageView: String,_ isNewCell: Bool,_ index: Int,_ category: Category?,_ notes: [Note]) {
         // Set the data and use
+        notesEdit = notes
         text = data
         image = imageView
         isNew = isNewCell
-        dataNotes = notesData
         indexSelect = index
-        
+        guard let categoryCell = category else {return}
+        categorySelect = categoryCell
     }
     static func getCache() -> String? {
-        // Try to get the data
         return text
+    }
+    static func getNotes() -> [Note] {
+        return notesEdit
     }
     static func getImage() -> String? {
         return image
@@ -33,31 +37,22 @@ struct CacheManager {
     static func getNew() -> Bool? {
         return isNew
     }
-    
-    static func getNotes() -> [Note]? {
-        return dataNotes
-    }
-    
     static func getIndex() -> Int? {
         return indexSelect
     }
+    static func getCategory() -> Category? {
+        return categorySelect
+    }
 }
 struct CacheManagerDone {
-    static var text = String()
-    static var image = String()
-    static func setCacheDone(_ data: String,_ imageView: String) {
+    static var dataNote = [Note]()
+    static func setCacheDone(_ data: [Note]) {
         // Set the data and use
-        text = data
-        image = imageView
+        dataNote = data
     }
-    static func setImageNew(_ imageView: String) {
-        image = imageView
-    }
-    static func getCache() -> String? {
+    static func getNotes() -> [Note]? {
         // Try to get the data
-        return text
+        return dataNote
     }
-    static func getImage() -> String? {
-        return image
-    }
+
 }

@@ -7,11 +7,8 @@
 
 protocol CustomTableViewCellDelegate {
     func addCollectionCell()
+    func deleteCategory(_ tag: Int)
 }
-
-//protocol getDataNote {
-//    func getData() -> [Note]
-//}
 
 import UIKit
 import CoreData
@@ -27,6 +24,10 @@ class HomeTableViewCell: UITableViewCell {
     var number = Int.random(in: 1...6)
     override func awakeFromNib() {
         super.awakeFromNib()
+       // updateCellWith(row: noteText)
+//        loadNotes()
+//        self.collectionView.delegate = self
+//        self.collectionView.dataSource = self
     }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
@@ -35,9 +36,19 @@ class HomeTableViewCell: UITableViewCell {
         self.collectionView.dataSource = self
     }
 
+//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
+//        super.init(style: style, reuseIdentifier: reuseIdentifier)
+//        collectionView.delegate = self
+//        collectionView.dataSource = self
+//        collectionView.register(HomeCollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
+//        collectionView.reloadData()
+//    }
+//    required init?(coder aDecoder: NSCoder) {
+//       super.init(coder: aDecoder)
+//    }
      // MARK: - Add Notes
-    @IBAction func addCollecttionCell(_ sender: Any) {
-        print("Add alert for delete category")
+    @IBAction func deleteCollecttionCell(_ sender: Any) {
+        delegate?.deleteCategory(self.tag)
     }
     // MARK: - Model Manupulation Methods
     func saveItems() {
@@ -48,29 +59,19 @@ class HomeTableViewCell: UITableViewCell {
         }
         collectionView.reloadData()
     }
-    func loadNotes() {
+      func loadNotes() {
         let request : NSFetchRequest<Note> = Note.fetchRequest()
         do {
             noteText = try context.fetch(request)
         } catch {
             print("Error loading categories \(error)")
         }
-        collectionView.reloadData()
+       collectionView.reloadData()
     }
-
-//    func saveData() {
-//        if isNewCell {
-//            let newNote = Note(context: context)
-//            newNote.text = CacheManagerDone.getCache()
-//            noteText.append(newNote)
-//            print("estou aqui")
-//            print(noteText[0].text ?? "falhou")
-//        } else {
-//            noteText[indexSelect].text = CacheManagerDone.getCache()
-//        }
-//        saveItems()
-//        collectionView.reloadData()
-//    }
+    func updateCellWith(row: [Note]) {
+        noteText = row
+        collectionView.reloadData()
+        }
 }
 // MARK: - Collection View Delegate and Datasource
 
@@ -82,7 +83,8 @@ extension HomeTableViewCell: UICollectionViewDataSource, UICollectionViewDelegat
         guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as? HomeCollectionViewCell else {
             fatalError("Unable create cell")
         }
-        //loadNotes()
+        cell.layer.cornerRadius = 20
+        cell.layer.shadowOffset = CGSize(width: -1, height: 1)
         if indexPath.row == 0 {
             cell.imageBack.image = UIImage(named: "addButton")
             cell.titleCollectionCell.text = ""
@@ -99,9 +101,9 @@ extension HomeTableViewCell: UICollectionViewDataSource, UICollectionViewDelegat
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            CacheManager.setCache("","\(number)", true, noteText, indexPath.row)
+            CacheManager.setCache("","\(number)", true, indexPath.row, nil, noteText)
         } else if indexPath.row >= 1 {
-            CacheManager.setCache(noteText[indexPath.row - 1].text ?? "", noteText[indexPath.row - 1].image ?? "\(number)", false, noteText, indexPath.row)
+            CacheManager.setCache(noteText[indexPath.row - 1].text ?? "", noteText[indexPath.row - 1].image ?? "\(number)", false, indexPath.row, noteText[indexPath.row - 1].parentCategory!, noteText)
         }
         delegate?.addCollectionCell()
         indexSelect = indexPath.row
