@@ -5,10 +5,6 @@
 //  Created by PATRICIA S SIQUEIRA on 13/10/20.
 //
 
-//protocol TableCellDelegate {
-//    <#requirements#>
-//}
-
 import UIKit
 import CoreData
 
@@ -72,7 +68,7 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
             let newNote = Note(context: context)
             newNote.text = note.text
             newNote.image = CacheManager.getImage()
-            newNote.parentCategory = category[indexSelect]
+            newNote.parentCategory = category[indexSelect] // passo a categoria mesmo
             notes.append(newNote)
         } else {
             guard let indexSelect = CacheManager.getIndex() else {return}
@@ -80,7 +76,6 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
             notes[indexSelect - 1].image = CacheManager.getImage()
         }
         saveItems()
-        //CacheManagerDone.setCacheDone(notes)
         tableView.reloadData()
         for cell in tableView.visibleCells {
             (cell as? HomeTableViewCell)?.collectionView.reloadData()
@@ -182,6 +177,7 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? HomeTableViewCell else { fatalError("Unable create cell") }
         cell.collectionView.contentOffset = .zero
         cell.titleTableCell.text = category[indexPath.row].title
+        cell.category = category[indexPath.row]
 //        selectedNote = category[indexPath.row]
 //        cell.updateCellWith(row: notes)
         cell.delegate = self

@@ -20,32 +20,24 @@ class HomeTableViewCell: UITableViewCell {
 
     var delegate: CustomTableViewCellDelegate?
     var noteText = [Note]()
+    var category: Category? {
+        didSet {
+            loadNotes()
+        }
+    }
     var indexSelect: Int = 0
     var number = Int.random(in: 1...6)
+
     override func awakeFromNib() {
         super.awakeFromNib()
-       // updateCellWith(row: noteText)
-//        loadNotes()
-//        self.collectionView.delegate = self
-//        self.collectionView.dataSource = self
+       // category?.parentNote
     }
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
-        loadNotes()
+        //loadNotes()
         self.collectionView.delegate = self
         self.collectionView.dataSource = self
     }
-
-//    override init(style: UITableViewCell.CellStyle, reuseIdentifier: String?) {
-//        super.init(style: style, reuseIdentifier: reuseIdentifier)
-//        collectionView.delegate = self
-//        collectionView.dataSource = self
-//        collectionView.register(HomeCollectionViewCell.self, forCellWithReuseIdentifier: "collectionCell")
-//        collectionView.reloadData()
-//    }
-//    required init?(coder aDecoder: NSCoder) {
-//       super.init(coder: aDecoder)
-//    }
      // MARK: - Add Notes
     @IBAction func deleteCollecttionCell(_ sender: Any) {
         delegate?.deleteCategory(self.tag)
@@ -59,15 +51,28 @@ class HomeTableViewCell: UITableViewCell {
         }
         collectionView.reloadData()
     }
-      func loadNotes() {
+//      func loadNotes() {
+//        let request : NSFetchRequest<Note> = Note.fetchRequest()
+//        do {
+//            noteText = try context.fetch(request)
+//        } catch {
+//            print("Error loading categories \(error)")
+//        }
+//       collectionView.reloadData()
+//    }
+    func loadNotes() {
+        guard let title = category?.title else {return}
+        let predicate = NSPredicate(format: "parentCategory.title == %@", title)//(format: "parentCategory.title == %@", arguments: title)
         let request : NSFetchRequest<Note> = Note.fetchRequest()
+        request.predicate = predicate
         do {
             noteText = try context.fetch(request)
+            collectionView.reloadData()
         } catch {
             print("Error loading categories \(error)")
         }
-       collectionView.reloadData()
     }
+    
     func updateCellWith(row: [Note]) {
         noteText = row
         collectionView.reloadData()
@@ -101,9 +106,9 @@ extension HomeTableViewCell: UICollectionViewDataSource, UICollectionViewDelegat
     }
     func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
         if indexPath.row == 0 {
-            CacheManager.setCache("","\(number)", true, indexPath.row, nil, noteText)
+            CacheManager.setCache("","\(number)", true, indexPath.row, noteText)
         } else if indexPath.row >= 1 {
-            CacheManager.setCache(noteText[indexPath.row - 1].text ?? "", noteText[indexPath.row - 1].image ?? "\(number)", false, indexPath.row, noteText[indexPath.row - 1].parentCategory!, noteText)
+            CacheManager.setCache(noteText[indexPath.row - 1].text ?? "", noteText[indexPath.row - 1].image ?? "\(number)", false, indexPath.row, noteText)
         }
         delegate?.addCollectionCell()
         indexSelect = indexPath.row
