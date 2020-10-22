@@ -9,6 +9,7 @@ import UIKit
 import CoreData
 
 class HomeViewController: UIViewController, CustomTableViewCellDelegate {
+   
     @IBOutlet var blurView: UIVisualEffectView!
     @IBOutlet var popupView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -17,13 +18,9 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
 
     var category = [Category]()
     var notes = [Note]()
-    var indexSelect:Int = 0
+    var indexSelected: Int = 0
+    var indexPathSelected: IndexPath?
     var number = Int.random(in: 1...6)
-//    var selectedNote: Category? {
-//        didSet {
-//            loadNotes()
-//        }
-//    }
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set blur view
@@ -68,7 +65,7 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
             let newNote = Note(context: context)
             newNote.text = note.text
             newNote.image = CacheManager.getImage()
-            newNote.parentCategory = category[indexSelect] // passo a categoria mesmo
+            newNote.parentCategory = CacheManager.getCategory()
             notes.append(newNote)
         } else {
             guard let indexSelect = CacheManager.getIndex() else {return}
@@ -87,21 +84,13 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
         animateIn(desiredView: popupView)
         note.text = CacheManager.getCache()
     }
-    func deleteCategory(_ tag: Int) {
-        let indexPath = IndexPath(row: tag, section: 0)
+    func deleteCategory(for cell: HomeTableViewCell) {
         DispatchQueue.main.async {
-            print(tag)
-            self.context.delete(self.category[tag])
-            self.category.remove(at: tag)
-            self.tableView.deleteRows(at: [indexPath], with: .fade)
-        }
-        saveItems()
-        tableView.reloadData()
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
+            self.loadCategories()
+            self.tableView.reloadData()
         }
     }
-    // MARK: - Animate View
+       // MARK: - Animate View
     func animateIn(desiredView: UIView) {
         let backgroundView = self.view!
         // Attach our desired view to the screen (backgroundView/self.view)
@@ -135,20 +124,6 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
         }
         self.tableView.reloadData()
     }
-//    func loadNotesSelected(with request: NSFetchRequest<Note> = Note.fetchRequest(), predicate: NSPredicate? = nil) {
-//        let categoryPredicate = NSPredicate(format: "parentCategory.title MATCHES %@", selectedNote!.title!)
-//        if let addtionalPredicate = predicate {
-//            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
-//        } else {
-//            request.predicate = categoryPredicate
-//        }
-//        do {
-//            notes = try context.fetch(request)
-//        } catch {
-//            print("Error fetching data from context \(error)")
-//        }
-//        tableView.reloadData()
-//    }
     func loadCategories() {
         let request : NSFetchRequest<Category> = Category.fetchRequest()
         do {
@@ -158,14 +133,6 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
         }
         tableView.reloadData()
     }
-//    func loadNotes() {
-//        let request : NSFetchRequest<Note> = Note.fetchRequest()
-//        do {
-//            notes = try context.fetch(request)
-//        } catch {
-//            print("Error loading categories \(error)")
-//        }
-//    }
 }
 // MARK: - TableView Delegate and Datasource Methods
 
@@ -178,9 +145,11 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.collectionView.contentOffset = .zero
         cell.titleTableCell.text = category[indexPath.row].title
         cell.category = category[indexPath.row]
-//        selectedNote = category[indexPath.row]
-//        cell.updateCellWith(row: notes)
+        print(indexPath.row)
+        print(cell.indexCell)
         cell.delegate = self
+        cell.indexPath = indexPath
+        cell.indexCell = indexPath.row
         cell.collectionView.reloadData()
         return cell
     }
@@ -188,7 +157,6 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         return 230
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-        //indexSelect = indexPath
         tableView.deselectRow(at: indexPath, animated: true)
     }
 }
