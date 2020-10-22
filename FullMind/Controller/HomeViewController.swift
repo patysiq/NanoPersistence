@@ -84,7 +84,7 @@ class HomeViewController: UIViewController, CustomTableViewCellDelegate {
         animateIn(desiredView: popupView)
         note.text = CacheManager.getCache()
     }
-    func deleteCategory(for cell: HomeTableViewCell) {
+    func deleteCategory() {
         DispatchQueue.main.async {
             self.loadCategories()
             self.tableView.reloadData()
@@ -145,11 +145,9 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
         cell.collectionView.contentOffset = .zero
         cell.titleTableCell.text = category[indexPath.row].title
         cell.category = category[indexPath.row]
-        print(indexPath.row)
-        print(cell.indexCell)
         cell.delegate = self
-        cell.indexPath = indexPath
-        cell.indexCell = indexPath.row
+//        cell.indexPath = indexPath
+//        cell.indexCell = indexPath.row
         cell.collectionView.reloadData()
         return cell
     }

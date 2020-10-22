@@ -7,7 +7,7 @@
 
 protocol CustomTableViewCellDelegate {
     func addCollectionCell()
-    func deleteCategory(for cell: HomeTableViewCell)
+    func deleteCategory()
 }
 
 import UIKit
@@ -19,8 +19,8 @@ class HomeTableViewCell: UITableViewCell {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext // swiftlint:disable:this force_cast
 
     var delegate: CustomTableViewCellDelegate?
-    var indexPath: IndexPath?
-    var indexCell:Int?
+    //var indexPath: IndexPath?
+    //var indexCell:Int?
     var noteText = [Note]()
     var category: Category? {
         didSet {
@@ -41,13 +41,17 @@ class HomeTableViewCell: UITableViewCell {
     }
     // MARK: - Add Notes
     @IBAction func deleteCollecttionCell(_ sender: Any) {
-       guard let cat = category else {return}
-        DispatchQueue.main.async {
-            self.context.delete(cat)
-            self.saveItems()
+        let alert = UIAlertController(title: "Delete category?", message: "", preferredStyle: .alert)
+        let action = UIAlertAction(title: "Delete", style: .destructive) { (action) in
+            guard let cat = self.category else {return}
+             DispatchQueue.main.async {
+                 self.context.delete(cat)
+                 self.saveItems()
+             }
+            self.delegate?.deleteCategory()
         }
-        let currentCell = self
-        delegate?.deleteCategory(for: currentCell)
+        alert.addAction(action)
+        UIApplication.shared.keyWindow?.rootViewController?.present(alert, animated: true, completion: nil)
     }
     // MARK: - Model Manupulation Methods
     func saveItems() {
