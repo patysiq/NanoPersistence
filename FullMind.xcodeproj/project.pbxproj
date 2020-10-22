@@ -20,6 +20,7 @@
 		7B3A42D125368E230091F61D /* FullMindUITests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B3A42D025368E230091F61D /* FullMindUITests.swift */; };
 		7B93CAAC25388DE500719CB8 /* HomeCollectionViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B93CAAB25388DE500719CB8 /* HomeCollectionViewCell.swift */; };
 		7BCC230A2537ECE300E00982 /* HomeTableViewCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7BCC23092537ECE300E00982 /* HomeTableViewCell.swift */; };
+		7BF8CC2F2541F0AC00F39200 /* CloudKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 7BF8CC2E2541F0AC00F39200 /* CloudKit.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -59,6 +60,8 @@
 		7B3A42D225368E230091F61D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		7B93CAAB25388DE500719CB8 /* HomeCollectionViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeCollectionViewCell.swift; sourceTree = "<group>"; };
 		7BCC23092537ECE300E00982 /* HomeTableViewCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = HomeTableViewCell.swift; sourceTree = "<group>"; };
+		7BF8CC2C2541F0A700F39200 /* FullMind.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = FullMind.entitlements; sourceTree = "<group>"; };
+		7BF8CC2E2541F0AC00F39200 /* CloudKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CloudKit.framework; path = System/Library/Frameworks/CloudKit.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +69,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				7BF8CC2F2541F0AC00F39200 /* CloudKit.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -94,6 +98,7 @@
 				7B3A42C425368E230091F61D /* FullMindTests */,
 				7B3A42CF25368E230091F61D /* FullMindUITests */,
 				7B3A42A925368E220091F61D /* Products */,
+				7BF8CC2D2541F0AC00F39200 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -110,6 +115,7 @@
 		7B3A42AA25368E220091F61D /* FullMind */ = {
 			isa = PBXGroup;
 			children = (
+				7BF8CC2C2541F0A700F39200 /* FullMind.entitlements */,
 				7BCC23052537E32300E00982 /* Controller */,
 				7BCC23042537E31B00E00982 /* View */,
 				7BCC23032537E31500E00982 /* Model */,
@@ -165,6 +171,14 @@
 				7B2D9BE6253F0FA80065F319 /* CacheManager.swift */,
 			);
 			path = Controller;
+			sourceTree = "<group>";
+		};
+		7BF8CC2D2541F0AC00F39200 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				7BF8CC2E2541F0AC00F39200 /* CloudKit.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -501,6 +515,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FullMind/FullMind.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 937MK3AF6X;
@@ -522,6 +537,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				ASSETCATALOG_COMPILER_GLOBAL_ACCENT_COLOR_NAME = AccentColor;
+				CODE_SIGN_ENTITLEMENTS = FullMind/FullMind.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = 937MK3AF6X;
