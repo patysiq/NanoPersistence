@@ -4,10 +4,12 @@
 //
 //  Created by PATRICIA S SIQUEIRA on 13/10/20.
 //
+
 import UIKit
 import CoreData
 
-class HomeViewController: UIViewController {
+class HomeViewController: UIViewController, CustomTableViewCellDelegate {
+   
     @IBOutlet var blurView: UIVisualEffectView!
     @IBOutlet var popupView: UIView!
     @IBOutlet weak var tableView: UITableView!
@@ -15,13 +17,10 @@ class HomeViewController: UIViewController {
     let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext // swiftlint:disable:this force_cast
 
     var category = [Category]()
-    var noteText = [Note]()
+    var notes = [Note]()
+    var indexSelected: Int = 0
+    var indexPathSelected: IndexPath?
     var number = Int.random(in: 1...6)
-    var selectedNote: Category? {
-        didSet {
-            loadNotes()
-        }
-    }
     override func viewDidLoad() {
         super.viewDidLoad()
         // Set blur view
@@ -31,8 +30,8 @@ class HomeViewController: UIViewController {
         // Do any additional setup after loading the view.
         tableView.delegate = self
         tableView.dataSource = self
-        //loadCategories()
-        //loadNotes()
+        loadCategories()
+        tableView.reloadData()
         print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
    }
 
@@ -55,25 +54,43 @@ class HomeViewController: UIViewController {
         alert.addAction(action)
         present(alert, animated: true, completion: nil)
     }
-    // MARK: - Add new Note
+    // MARK: - Note Text Cache for View
     @IBAction func doneButton(_ sender: Any) {
         animateOut(desiredView: popupView)
         animateOut(desiredView: blurView)
-        if selectedNote == nil {
+        notes.removeAll()
+        notes = CacheManager.getNotes()
+        guard let isNewNote = CacheManager.getNew() else {return}
+        if isNewNote {
             let newNote = Note(context: context)
             newNote.text = note.text
-            newNote.parentCategory = self.selectedNote
-            noteText.append(newNote)
+            newNote.image = CacheManager.getImage()
+            newNote.parentCategory = CacheManager.getCategory()
+            notes.append(newNote)
         } else {
-            category[tableView.indexPathForSelectedRow?.row ?? 0].parentNote?.text = note.text
+            guard let indexSelect = CacheManager.getIndex() else {return}
+            notes[indexSelect - 1].text = note.text
+            notes[indexSelect - 1].image = CacheManager.getImage()
         }
         saveItems()
+        tableView.reloadData()
         for cell in tableView.visibleCells {
             (cell as? HomeTableViewCell)?.collectionView.reloadData()
         }
-        tableView.reloadData()
     }
-    // MARK: - Animate View
+    func addCollectionCell() {
+        popupView.backgroundColor = UIColor(named: CacheManager.getImage() ?? "\(number)")
+        animateIn(desiredView: blurView)
+        animateIn(desiredView: popupView)
+        note.text = CacheManager.getCache()
+    }
+    func deleteCategory(for cell: HomeTableViewCell) {
+        DispatchQueue.main.async {
+            self.loadCategories()
+            self.tableView.reloadData()
+        }
+    }
+       // MARK: - Animate View
     func animateIn(desiredView: UIView) {
         let backgroundView = self.view!
         // Attach our desired view to the screen (backgroundView/self.view)
@@ -105,27 +122,7 @@ class HomeViewController: UIViewController {
         } catch {
             print("Error saving context \(error)")
         }
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
-        }
         self.tableView.reloadData()
-    }
-    func loadNotes(with request: NSFetchRequest<Note> = Note.fetchRequest(), predicate: NSPredicate? = nil) {
-        let categoryPredicate = NSPredicate(format: "parentCategory.title MATCHES %@", selectedNote!.title!)
-        if let addtionalPredicate = predicate {
-            request.predicate = NSCompoundPredicate(andPredicateWithSubpredicates: [categoryPredicate, addtionalPredicate])
-        } else {
-            request.predicate = categoryPredicate
-        }
-        do {
-            noteText = try context.fetch(request)
-        } catch {
-            print("Error fetching data from context \(error)")
-        }
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
-        }
-        tableView.reloadData()
     }
     func loadCategories() {
         let request : NSFetchRequest<Category> = Category.fetchRequest()
@@ -133,9 +130,6 @@ class HomeViewController: UIViewController {
             category = try context.fetch(request)
         } catch {
             print("Error loading categories \(error)")
-        }
-        for cell in tableView.visibleCells {
-            (cell as? HomeTableViewCell)?.collectionView.reloadData()
         }
         tableView.reloadData()
     }
@@ -148,10 +142,15 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
        guard let cell = tableView.dequeueReusableCell(withIdentifier: "cell", for: indexPath) as? HomeTableViewCell else { fatalError("Unable create cell") }
+        cell.collectionView.contentOffset = .zero
         cell.titleTableCell.text = category[indexPath.row].title
-        cell.collectionView.delegate = self
-        cell.collectionView.dataSource = self
+        cell.category = category[indexPath.row]
+        print(indexPath.row)
+        print(cell.indexCell)
         cell.delegate = self
+        cell.indexPath = indexPath
+        cell.indexCell = indexPath.row
+        cell.collectionView.reloadData()
         return cell
     }
     func tableView(_ tableView: UITableView, heightForRowAt indexPath: IndexPath) -> CGFloat {
@@ -159,37 +158,5 @@ extension HomeViewController: UITableViewDelegate, UITableViewDataSource {
     }
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         tableView.deselectRow(at: indexPath, animated: true)
-    }
-
-}
-// MARK: - Collection View Delegate and Datasource
-
-extension HomeViewController: UICollectionViewDataSource, UICollectionViewDelegate, UICollectionViewDelegateFlowLayout {
-    func collectionView(_ collectionView: UICollectionView, numberOfItemsInSection section: Int) -> Int {
-        return noteText.count
-    }
-    func collectionView(_ collectionView: UICollectionView, cellForItemAt indexPath: IndexPath) -> UICollectionViewCell {
-        guard let cell = collectionView.dequeueReusableCell(withReuseIdentifier: "collectionCell", for: indexPath) as? HomeCollectionViewCell else {
-            fatalError("Unable create cell")
-        }
-        cell.imageBack.image = UIImage(named: "\(number)")
-        cell.titleCollectionCell.text = noteText[indexPath.row].text
-        return cell
-    }
-    func collectionView(_ collectionView: UICollectionView, layout collectionViewLayout: UICollectionViewLayout, sizeForItemAt indexPath: IndexPath) -> CGSize {
-        return CGSize(width: 180.0, height: 180.0)
-    }
-    func collectionView(_ collectionView: UICollectionView, didSelectItemAt indexPath: IndexPath) {
-        popupView.backgroundColor = UIColor(named: "\(number)")
-        animateIn(desiredView: blurView)
-        animateIn(desiredView: popupView)
-    }
-}
-// MARK: - add Notes Methods
-extension HomeViewController: CustomTableViewCellDelegate {
-    func addCollectionCell() {
-        popupView.backgroundColor = UIColor(named: "\(number)")
-        animateIn(desiredView: blurView)
-        animateIn(desiredView: popupView)
     }
 }
