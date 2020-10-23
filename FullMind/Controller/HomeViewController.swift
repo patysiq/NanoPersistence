@@ -9,7 +9,6 @@ import UIKit
 import CoreData
 
 class HomeViewController: UIViewController, CustomTableViewCellDelegate {
-   
     @IBOutlet var blurView: UIVisualEffectView!
     @IBOutlet var popupView: UIView!
     @IBOutlet weak var tableView: UITableView!
